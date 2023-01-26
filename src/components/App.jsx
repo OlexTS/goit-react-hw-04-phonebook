@@ -6,43 +6,40 @@ import Filter from './Filter';
 import { Container, MainTitle, Title } from './App.styled';
 
 const initialContactsState = () => {
-    const contacts = window.localStorage.getItem('Contact');
-     if (contacts !== null) {
+  const contacts = localStorage.getItem('Contact');
+  if (contacts !== null) {
     const parseContacts = JSON.parse(contacts);
-      return parseContacts ;
-    }
-  
-}
+    return parseContacts;
+  } else {
+    return [];
+  }
+};
 
 const App = () => {
   const [contacts, setContacts] = useState(initialContactsState);
   const [filter, setFilter] = useState('');
-  
+
   useEffect(() => {
- window.localStorage.setItem('Contact', JSON.stringify(contacts));
+    localStorage.setItem('Contact', JSON.stringify(contacts));
   }, [contacts]);
 
   const addContact = ({ name, number }) => {
     const contact = { id: nanoid(), name, number };
     contacts.some(contact => contact.name.toLowerCase() === name.toLowerCase())
       ? alert(`${name} is already in contacts.`)
-      : setContacts (
-          [contact, ...contacts],
-        );
+      : setContacts([contact, ...contacts]);
   };
 
   const deleteContact = contactId => {
-    setContacts(
-      contacts.filter(contact => contact.id !== contactId),
-    );
+    setContacts(contacts.filter(contact => contact.id !== contactId));
   };
 
   const changeFilter = event => {
-    setFilter( event.currentTarget.value );
+    setFilter(event.currentTarget.value);
   };
 
   const getVisibleContacts = () => {
-  return contacts.filter(({name}) =>
+    return contacts.filter(({ name }) =>
       name.toLowerCase().includes(filter.toLowerCase())
     );
   };
